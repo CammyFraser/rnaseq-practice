@@ -1,0 +1,60 @@
+name: Run nf-core/rnaseq
+
+on:
+  workflow_dispatch:  # Allows manual triggering of the workflow from GitHub UI
+
+jobs:
+  rnaseq:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout the repository code
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Step 2: Install Nextflow
+    - name: Install Nextflow
+      run: |
+        curl -s https://get.nextflow.io | bash
+        sudo mv nextflow /usr/local/bin/
+
+    # Step 3: Set up Docker
+    - name: Set up Docker
+      uses: docker/setup-buildx-action@v2
+
+    # Step 4: Download Test Data
+    - name: Download test data
+      run: |
+        mkdir -p data
+        curl -L -o data/samplesheet_micro.csv https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/samplesheet_micro.csv
+        curl -L -o data/genome.fa.gz https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/genome.fa.gz
+
+    # Step 5: Run the nf-core/rnaseq pipeline
+    - name: Run RNA-seq pipeline
+      run: |
+        nextflow run nf-core/rnaseq \
+          -profile docker \
+          --input data/samplesheet_micro.csv \
+          --fasta data/genome.fa.gz \
+          --genome GRCh38 \
+          -with-report report.html \
+          -with-timeline timeline.html \
+          -with-dag flowchart.png
+
+    # Step 6: Upload workflow artifacts (reports)
+    - name: Upload workflow artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: rnaseq-output
+        path: |
+          report.html
+          timeline.html
+          flowchart.png
+
+
+
+
+
+
+
+
