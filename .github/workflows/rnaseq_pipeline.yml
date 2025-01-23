@@ -37,6 +37,7 @@ jobs:
           --input testdatav1/samplesheet_micro.csv \
           --fasta testdatav1/genome.fa.gz \
           --genome GRCh38 \
+          --outdir results \
           -with-report report.html \
           -with-timeline timeline.html \
           -with-dag flowchart.png
