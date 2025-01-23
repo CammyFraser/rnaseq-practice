@@ -25,17 +25,17 @@ jobs:
     # Step 4: Download Test Data
     - name: Download test data
       run: |
-        mkdir -p data
-        curl -L -o data/samplesheet_micro.csv https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/samplesheet_micro.csv
-        curl -L -o data/genome.fa.gz https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/genome.fa.gz
+        mkdir -p testdatav1
+        curl -L -o testdatav1/samplesheet_micro.csv https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/samplesheet_micro.csv
+        curl -L -o testdatav1/genome.fa.gz https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/genome.fa.gz
 
     # Step 5: Run the nf-core/rnaseq pipeline
     - name: Run RNA-seq pipeline
       run: |
         nextflow run nf-core/rnaseq \
           -profile docker \
-          --input data/samplesheet_micro.csv \
-          --fasta data/genome.fa.gz \
+          --input testdatav1/samplesheet_micro.csv \
+          --fasta testdatav1/genome.fa.gz \
           --genome GRCh38 \
           -with-report report.html \
           -with-timeline timeline.html \
